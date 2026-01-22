@@ -8,6 +8,7 @@ use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Schema;
+use App\Models\Invoice;
 
 class InvoiceForm
 {
@@ -28,25 +29,30 @@ class InvoiceForm
                             ->mapWithKeys(fn ($unit) => [
                                 $unit->id => $unit->display_name,
                             ])
-                    ),
+                    )
+                    ->disabled(fn (?Invoice $record) => $record && $record->status !== 'draft'),
 
                 TextInput::make('invoice_no')
                     ->label('Invoice No')
                     ->required()
-                    ->unique(ignoreRecord: true),
+                    ->unique(ignoreRecord: true)
+                    ->disabled(fn (?Invoice $record) => $record && $record->status !== 'draft'),
 
                 TextInput::make('billing_period')
                     ->label('Billing Period')
                     ->placeholder('YYYY-MM')
-                    ->required(),
+                    ->required()
+                    ->disabled(fn (?Invoice $record) => $record && $record->status !== 'draft'),
 
                 DatePicker::make('issue_date')
                     ->label('Issue Date')
-                    ->required(),
+                    ->required()
+                    ->disabled(fn (?Invoice $record) => $record && $record->status !== 'draft'),
 
                 DatePicker::make('due_date')
                     ->label('Due Date')
-                    ->required(),
+                    ->required()
+                    ->disabled(fn (?Invoice $record) => $record && $record->status !== 'draft'),
 
                 // 🔽 Invoice Items
                 Repeater::make('items')
@@ -65,7 +71,8 @@ class InvoiceForm
                     ->defaultItems(1)
                     ->columns(3)
                     ->reorderable()
-                    ->columnSpanFull(),
+                    ->columnSpanFull()
+                    ->disabled(fn (?Invoice $record) => $record && $record->status !== 'draft'),
             ]);
     }
 }

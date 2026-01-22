@@ -45,6 +45,16 @@ class InvoiceInfolist
                         TextEntry::make('total_amount')
                             ->label('Total Amount')
                             ->money('MYR'),
+
+                        TextEntry::make('paid_amount')
+                            ->label('Paid Amount')
+                            ->money('MYR'),
+
+                        TextEntry::make('balance_amount')
+                            ->label('Outstanding')
+                            ->money('MYR')
+                            ->color(fn ($state) => $state > 0 ? 'danger' : 'success'),
+
                     ]),
 
                 // ===============================
@@ -68,6 +78,8 @@ class InvoiceInfolist
                             ->columns(2)
                             ->contained(false),
                     ]),
+
+
             ]);
     }
 }

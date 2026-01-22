@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\PaymentReceiptController;
 
 Route::get('/', function () {
     return view('landing');
@@ -31,5 +32,12 @@ Route::middleware(['auth'])->group(function () {
 
         return view('portal.dashboard');
     });
+
+    Route::get('/system/payments/{payment}/receipt', PaymentReceiptController::class)
+        ->name('system.payments.receipt');
+
 });
+
+
+
 

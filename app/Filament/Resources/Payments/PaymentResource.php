@@ -15,6 +15,8 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Filament\Tables;
+
 
 class PaymentResource extends Resource
 {
@@ -34,7 +36,32 @@ class PaymentResource extends Resource
 
     public static function table(Table $table): Table
     {
-        return PaymentsTable::configure($table);
+        return $table
+            ->query(\App\Models\Payment::query())
+            ->columns([
+                Tables\Columns\TextColumn::make('receipt_no')
+                    ->label('Receipt No')
+                    ->searchable(),
+
+                Tables\Columns\TextColumn::make('invoice.invoice_no')
+                    ->label('Invoice')
+                    ->searchable(),
+
+                Tables\Columns\TextColumn::make('invoice.unit.display_name')
+                    ->label('Unit'),
+
+                Tables\Columns\TextColumn::make('amount')
+                    ->money('MYR')
+                    ->alignRight(),
+
+                Tables\Columns\TextColumn::make('method')
+                    ->badge(),
+
+                Tables\Columns\TextColumn::make('payment_date')
+                    ->date()
+                    ->sortable(),
+            ])
+            ->defaultSort('payment_date', 'desc');
     }
 
     public static function getRelations(): array
@@ -48,9 +75,25 @@ class PaymentResource extends Resource
     {
         return [
             'index' => ListPayments::route('/'),
-            'create' => CreatePayment::route('/create'),
+            //'create' => CreatePayment::route('/create'),
             'view' => ViewPayment::route('/{record}'),
-            'edit' => EditPayment::route('/{record}/edit'),
+            //'edit' => EditPayment::route('/{record}/edit'),
         ];
     }
+
+    public static function canCreate(): bool
+    {
+        return false;
+    }
+
+    public static function canEdit($record): bool
+    {
+        return false;
+    }
+
+    public static function canDelete($record): bool
+    {
+        return false;
+    }
+
 }

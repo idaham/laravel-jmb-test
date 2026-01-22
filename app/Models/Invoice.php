@@ -41,14 +41,24 @@ class Invoice extends Model
         $this->save();
     }
 
-    public function totalPaid(): float
+    //public function totalPaid(): float
+    //{
+    //    return $this->payments()->sum('amount');
+    //}
+    public function getPaidAmountAttribute(): float
     {
-        return $this->payments()->sum('amount');
+        return (float) $this->payments()->sum('amount');
+    }
+
+    public function getBalanceAmountAttribute(): float
+    {
+        return max(0, $this->total_amount - $this->paid_amount);
     }
 
     public function refreshStatus(): void
     {
-        $paid = $this->totalPaid();
+        //$paid = $this->totalPaid();
+        $paid = $this->paid_amount;
 
         if ($paid <= 0) {
             $this->status = now()->gt($this->due_date)
@@ -60,7 +70,16 @@ class Invoice extends Model
             $this->status = 'paid';
         }
 
-        $this->save();
+        //$this->save();
+        $this->saveQuietly();
     }
+
+    public function canAcceptPayment(float $amount): bool
+    {
+        //return ($this->paid_amount + $amount) <= $this->total_amount;
+        return $amount <= $this->balance_amount;
+    }
+
+
 
 }
