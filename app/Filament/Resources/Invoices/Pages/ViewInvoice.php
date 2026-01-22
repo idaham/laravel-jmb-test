@@ -33,11 +33,5 @@ class ViewInvoice extends ViewRecord
         ];
     }
 
-    public function getRelationManagers(): array
-    {
-        return [
-            \App\Filament\Resources\Invoices\RelationManagers\PaymentsRelationManager::class,
-        ];
-    }
 
 }
