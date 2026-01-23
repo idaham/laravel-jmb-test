@@ -74,10 +74,11 @@ class Invoice extends Model
         $this->saveQuietly();
     }
 
-    public function canAcceptPayment(float $amount): bool
+    public function canAcceptPayment(float $amount=0): bool
     {
         //return ($this->paid_amount + $amount) <= $this->total_amount;
-        return $amount <= $this->balance_amount;
+        //return $amount <= $this->balance_amount;
+        return $this->balance_amount > 0 && $amount <= $this->balance_amount;
     }
 
 

@@ -2,11 +2,8 @@
 
 namespace App\Filament\Resources\Payments;
 
-use App\Filament\Resources\Payments\Pages\CreatePayment;
-use App\Filament\Resources\Payments\Pages\EditPayment;
 use App\Filament\Resources\Payments\Pages\ListPayments;
 use App\Filament\Resources\Payments\Pages\ViewPayment;
-use App\Filament\Resources\Payments\Schemas\PaymentForm;
 use App\Filament\Resources\Payments\Schemas\PaymentInfolist;
 use App\Filament\Resources\Payments\Tables\PaymentsTable;
 use App\Models\Payment;
@@ -16,18 +13,13 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Filament\Tables;
-
+use Filament\Actions\Action;
 
 class PaymentResource extends Resource
 {
     protected static ?string $model = Payment::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
-
-    public static function form(Schema $schema): Schema
-    {
-        return PaymentForm::configure($schema);
-    }
 
     public static function infolist(Schema $schema): Schema
     {
@@ -60,6 +52,17 @@ class PaymentResource extends Resource
                 Tables\Columns\TextColumn::make('payment_date')
                     ->date()
                     ->sortable(),
+            ])
+            ->actions([
+                Action::make('receipt')
+                    ->label('')
+                    ->color('gray')
+                    ->tooltip('Download receipt')
+                    ->icon('heroicon-o-arrow-down-tray')
+                    ->url(fn (Payment $record) =>
+                        route('system.payments.receipt', $record)
+                    )
+                    ->openUrlInNewTab(),
             ])
             ->defaultSort('payment_date', 'desc');
     }

@@ -45,35 +45,11 @@ class PaymentsRelationManager extends RelationManager
                     ->label('Recorded')
                     ->since(),
             ])
-            ->headerActions([
-                CreateAction::make()
-                    ->label('Add Payment')
-                    ->modalHeading('Add Payment')
-                    ->form([
-                        DatePicker::make('payment_date')
-                            ->required(),
-
-                        TextInput::make('amount')
-                            ->numeric()
-                            ->required()
-                            ->minValue(0.01),
-
-                        Select::make('method')
-                            ->options([
-                                'cash' => 'Cash',
-                                'bank_transfer' => 'Bank Transfer',
-                                'cheque' => 'Cheque',
-                            ])
-                            ->required(),
-                    ])
-                    ->disabled(fn () => $this->getOwnerRecord()->status === 'paid')
-                    ->after(function () {
-                        $this->getOwnerRecord()->refresh();
-                    }),
-            ])
             ->actions([
                 Action::make('receipt')
-                    ->label('Receipt')
+                    ->label('')
+                    ->tooltip('Download receipt')
+                    ->color('gray')
                     ->icon('heroicon-o-arrow-down-tray')
                     ->url(fn ($record) => route('system.payments.receipt', $record))
                     ->openUrlInNewTab(),

@@ -2,21 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Payment;
-use Barryvdh\DomPDF\Facade\Pdf;
+use App\Services\ReceiptService;
+use App\Models\Payment; 
 
 class PaymentReceiptController extends Controller
 {
-    public function __invoke(Payment $payment)
+    public function __invoke(Payment $payment, ReceiptService $service)
     {
-        $payment->load(['invoice', 'unit', 'receiver']);
-
-        $pdf = Pdf::loadView('receipts.payment', [
-            'payment' => $payment,
-        ]);
-
-        return $pdf->stream(
-            'receipt-' . $payment->receipt_no . '.pdf'
-        );
+        return $service->streamPaymentReceipt($payment);
     }
 }
