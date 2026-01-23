@@ -22,11 +22,11 @@ class InvoiceItem extends Model
     protected static function booted()
     {
         static::saved(function (InvoiceItem $item) {
-            $item->invoice->recalculateTotal();
+            $item->invoice->recalculateTotals();
         });
 
         static::deleted(function (InvoiceItem $item) {
-            $item->invoice->recalculateTotal();
+            $item->invoice->recalculateTotals();
         });
     }
 

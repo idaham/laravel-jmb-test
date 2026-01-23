@@ -35,7 +35,7 @@ class Invoice extends Model
         return $this->hasMany(Payment::class);
     }
 
-    public function recalculateTotal(): void
+    public function recalculateTotals(): void
     {
         $this->total_amount = $this->items()->sum('amount');
         $this->save();
